@@ -1,0 +1,4 @@
+[debug] Acquiring lock on file C:\Users\hai\IdeaProjects\SpellChecker2\project\target\.sbt-compilation-infos\spellchecker2-compile\.sbt-idea-lock ...
+[info] C:\Users\hai\IdeaProjects\SpellChecker2\src\main\scala\JazzyTest1.java: JazzyTest1.java uses unchecked or unsafe operations.
+[info] C:\Users\hai\IdeaProjects\SpellChecker2\src\main\scala\JazzyTest1.java: Recompile with -Xlint:unchecked for details.
+[debug] Releasing lock on file C:\Users\hai\IdeaProjects\SpellChecker2\project\target\.sbt-compilation-infos\spellchecker2-compile\.sbt-idea-lock.

@@ -1,0 +1,24 @@
+[debug] [zinc] IncrementalCompile -----------
+[debug] IncrementalCompile.incrementalCompile
+[debug] previous = Stamps for: 0 products, 0 sources, 0 libraries
+[debug] current source = Set(${BASE}/src/main/scala/JazzyTest1.java, ${BASE}/src/main/scala/SpellChecker.scala)
+[debug] > initialChanges = InitialChanges(Changes(added = Set(${BASE}/src/main/scala/JazzyTest1.java, ${BASE}/src/main/scala/SpellChecker.scala), removed = Set(), changed = Set(), unmodified = ...),Set(),Set(),API Changes: Set())
+[debug] Full compilation, no sources in previous analysis.
+[debug] all 2 sources are invalidated
+[debug] Initial set of included nodes: 
+[debug] Recompiling all sources: number of invalidated sources > 50.0% of all sources
+[debug] compilation cycle 1
+[info] compiling 1 Scala source and 1 Java source to C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes ...
+[debug] Getting org.scala-sbt:compiler-bridge_2.13:1.6.0:compile for Scala 2.13.8
+[debug] [zinc] Running cached compiler 745d10fe for Scala compiler version 2.13.8
+[debug] [zinc] The Scala compiler is invoked with:
+[debug] 	-bootclasspath
+[debug] 	C:\Program Files\Java\jdk1.8.0_311\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_311\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_311\jre\classes;C:\Users\hai\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-library\2.13.8\scala-library-2.13.8.jar
+[debug] 	-classpath
+[debug] 	C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes;C:\Users\hai\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\au\id\jazzy\play-geojson_2.12\1.7.0\play-geojson_2.12-1.7.0.jar;C:\Users\hai\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\net\sf\jazzy\jazzy-core\0.5.2\jazzy-core-0.5.2.jar
+[debug] Scala compilation took 6.5105315 s
+[debug] Attempting to call com.sun.tools.javac.api.JavacTool@4b7187c0 directly...
+[debug] Java compilation took 0.897104 s
+[debug] Java analysis took 0.0251067 s
+[debug] Java compilation + analysis took 0.9347486 s
+[info] done compiling

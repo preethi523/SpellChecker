@@ -1,0 +1,13 @@
+[debug] Packaging C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\spellchecker2_2.13-0.1.jar ...
+[debug] Input file mappings:
+[debug] 	JazzyTest1.class
+[debug] 	  C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes\JazzyTest1.class
+[debug] 	Main$.class
+[debug] 	  C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes\Main$.class
+[debug] 	Main.class
+[debug] 	  C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes\Main.class
+[debug] 	Trie$.class
+[debug] 	  C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes\Trie$.class
+[debug] 	Trie.class
+[debug] 	  C:\Users\hai\IdeaProjects\SpellChecker2\target\scala-2.13\classes\Trie.class
+[debug] Done packaging.
