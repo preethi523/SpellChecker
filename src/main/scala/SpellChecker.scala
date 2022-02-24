@@ -2,6 +2,7 @@
 import Trie.Trie
 import com.github.vickumar1981.stringdistance.StringConverter._
 
+import java.io.FileNotFoundException
 import java.nio.charset.CodingErrorAction
 import scala.collection.mutable.ArrayBuffer
 import scala.io.{Codec, Source}
@@ -77,31 +78,22 @@ object Main {
     val inputString = scala.io.StdIn.readLine()
     println("Is given input is :" + inputString)
     val inputLowercase = inputString.toLowerCase.trim()
-    val input = inputLowercase.replace(".", "")
+    val input = inputLowercase.replace("." , "")
     val s = input.split(" ")
-    var correctInput = new ArrayBuffer[String]()
-    var correctedInput = new ArrayBuffer[String]()
-    var finalCorrect= new ArrayBuffer[String]()
+    val t = s.zipWithIndex
+    val arr = new Array[String](s.length)
 
+    var correctedInput= " "
     for (i <- 0 until s.length) {
-      if (p.get(s(i)) != None) {
-        correctInput +=s(i)
-        finalCorrect+=correctInput.mkString(" ")
-        print(finalCorrect.mkString)
-       // println(correctInput.mkString(" "))
-       // correctInput=correctInput +s(i)+ " "
+      if (p.get(t(i)._1) != None) {
+        arr(t(i)._2) = t(i)._1
       }
-      // if (pre.get(s(i))==Some(1)) print(s(i))
       else {
-         correctedInput  += p.correctingWord(s(i), DictionaryList)
-         finalCorrect +=correctedInput.mkString(" ")
-        print(finalCorrect.mkString)
-        //println(correctedInput.mkString(" "))
+         val q  = p.correctingWord(t(i)._1, DictionaryList)
+        arr(t(i)._2) = q
       }
     }
-//println(correctInput.mkString(" ") + " "+ correctedInput.mkString(" "))
- var c= finalCorrect.length
-    print(finalCorrect.mkString)
+    println(arr.mkString(" "))
     val b = System.currentTimeMillis()
    val diff = b - a
     print(diff)
@@ -120,10 +112,11 @@ object Main {
     codec.onMalformedInput(CodingErrorAction.REPLACE)
     codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
     // val a = System.currentTimeMillis()
-    val lines = Source.fromFile(path).getLines().toList
+    var lines= Source.fromFile(path).getLines().toList
     for (line <- lines.indices) {
-      p.put(lines(line), 1)
-    }
+        p.put(lines(line), 1)
+      }
+
     loggerObj.stopTime()
     loggerObj.logger.info("function read dictionary ended" + loggerObj.getTime)
      lines
