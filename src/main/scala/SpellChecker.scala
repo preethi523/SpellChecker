@@ -1,8 +1,11 @@
+
 import Trie.Trie
 import com.github.vickumar1981.stringdistance.StringConverter._
 
 import java.nio.charset.CodingErrorAction
+import scala.collection.mutable.ArrayBuffer
 import scala.io.{Codec, Source}
+
 object Trie {
   class Trie[Val] {
     private var store = new Node(Map(), None)
@@ -37,48 +40,93 @@ object Trie {
         f(this, vals, prefix)
       }
     }
-    def editDistance(s: String, dic: String): Int = {
-      val damerauDist: Int = s.damerauDist(dic)
-      damerauDist
-    }
-    def spellCorrection(s: String, path: String) = {
-      implicit val codec = Codec("UTF-8")
-      codec.onMalformedInput(CodingErrorAction.REPLACE)
-      codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
-      val lines = Source.fromFile(path).getLines().toList
-      for (line <- lines.indices) {
 
-       if( editDistance(s, lines(line))==1) print(lines(line)+" ")
-
-       //else print(editDistance(s,lines(line)))
+    /** *
+     *it corrects the incorrect word and by  dictionary list
+     * @param incorrectWord :String from user inputString not present in dictionary
+     * @param dictionaryList          :List[String] where the
+     */
+    def correctingWord(incorrectWord: String, dictionaryList:List[String]) = {
+      val loggerObj = new Logger()
+       loggerObj.logger.info("function correcting word started")
+      loggerObj.startTime()
+      var correctedWord = ""
+     // var damerauDistance=0
+      for (line <-dictionaryList.indices) {
+        if (incorrectWord.damerauDist(dictionaryList(line))== 1) {
+          correctedWord = (dictionaryList(line) + " ").mkString
+        }
+//         else if(incorrectWord.damerauDist(dictionaryList(line))>1){
+//         correctedWord=(dictionaryList(line)+" ").mkString
+//         }
       }
-
+      loggerObj.stopTime()
+      loggerObj.logger.info("function correcting word ended" + loggerObj.getTime)
+      correctedWord
     }
   }
 }
-  object Main {
-    def main(args: Array[String]): Unit = {
-      val p = new Trie[Int]
-      val path = "C:\\Users\\hai\\Desktop\\engmix.txt"
-      implicit val codec = Codec("UTF-8")
-      codec.onMalformedInput(CodingErrorAction.REPLACE)
-      codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
-      val a = System.currentTimeMillis()
-      val lines = Source.fromFile(path).getLines().toList
-      for (line <- lines.indices) {
-        // println(lines(line))
-        (p.put(lines(line), 1))
+
+object Main {
+  val p = new Trie[Int]
+  def main(args: Array[String]): Unit = {
+    val path = "C:\\Users\\hai\\Desktop\\SpellChecker\\engmix.txt"
+    val a = System.currentTimeMillis()
+    val DictionaryList = readDictionary(path)
+    println("Enter your input:")
+    val inputString = scala.io.StdIn.readLine()
+    println("Is given input is :" + inputString)
+    val inputLowercase = inputString.toLowerCase.trim()
+    val input = inputLowercase.replace(".", "")
+    val s = input.split(" ")
+    var correctInput = new ArrayBuffer[String]()
+    var correctedInput = new ArrayBuffer[String]()
+    var finalCorrect= new ArrayBuffer[String]()
+
+    for (i <- 0 until s.length) {
+      if (p.get(s(i)) != None) {
+        correctInput +=s(i)
+        finalCorrect+=correctInput.mkString(" ")
+        print(finalCorrect.mkString)
+       // println(correctInput.mkString(" "))
+       // correctInput=correctInput +s(i)+ " "
       }
-      val inputString = "This is an Apple. It is good for health. An Appple a day keeps doctor awau"
-      val input1 = inputString.toLowerCase.trim()
-       val input =input1.replace(".","")
-      val s = input.split(" ")
-      for (i <- 0 until s.length) {
-        if (p.get(s(i)) != None) print(s(i) + " ")
-        else p.spellCorrection(s(i), path)
+      // if (pre.get(s(i))==Some(1)) print(s(i))
+      else {
+         correctedInput  += p.correctingWord(s(i), DictionaryList)
+         finalCorrect +=correctedInput.mkString(" ")
+        print(finalCorrect.mkString)
+        //println(correctedInput.mkString(" "))
       }
-      val b = System.currentTimeMillis()
-      val diff = b - a
-      print(diff)
     }
+//println(correctInput.mkString(" ") + " "+ correctedInput.mkString(" "))
+ var c= finalCorrect.length
+    print(finalCorrect.mkString)
+    val b = System.currentTimeMillis()
+   val diff = b - a
+    print(diff)
+  }
+
+  /***reads the contents in the dictionary file and insert it into trie data structure
+   *
+   * @param path:dictionary path
+   * @return dictionarywords in list
+   */
+  def readDictionary(path:String)={
+    val loggerObj = new Logger()
+    loggerObj.logger.info("function readdictionary started")
+    loggerObj.startTime()
+    implicit val codec = Codec("UTF-8")
+    codec.onMalformedInput(CodingErrorAction.REPLACE)
+    codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
+    // val a = System.currentTimeMillis()
+    val lines = Source.fromFile(path).getLines().toList
+    for (line <- lines.indices) {
+      p.put(lines(line), 1)
+    }
+    loggerObj.stopTime()
+    loggerObj.logger.info("function read dictionary ended" + loggerObj.getTime)
+     lines
+  }
 }
+

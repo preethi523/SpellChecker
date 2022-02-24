@@ -4,8 +4,10 @@ version := "0.1"
 
 scalaVersion := "2.13.8"
 
-libraryDependencies += "au.id.jazzy" % "play-geojson_2.12" % "1.7.0"
-
-libraryDependencies += "net.sf.jazzy" % "jazzy-core" % "0.5.2"
-
 libraryDependencies += "com.github.vickumar1981" %% "stringdistance" % "1.2.6"
+
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
+
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.10"
+
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.12.0"
