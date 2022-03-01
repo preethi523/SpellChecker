@@ -1,4 +1,6 @@
 
+
+
 import Trie.Trie
 import com.github.vickumar1981.stringdistance.StringConverter._
 
@@ -41,63 +43,75 @@ object Trie {
         f(this, vals, prefix)
       }
     }
-
     /** *
-     *it corrects the incorrect word and by  dictionary list
-     * @param incorrectWord :String from user inputString not present in dictionary
-     * @param dictionaryList          :List[String] where the
-     */
-    def correctingWord(incorrectWord: String, dictionaryList:List[String]) = {
+//     * it corrects the incorrect word using dictionary list
+//     *
+//     * @param incorrectWord  :String from user inputString not present in dictionary
+//     * @param dictionaryList :List[String] where the dictionary words are present
+//     *                       @return: returns a  corrected string
+//     */
+    def correctingWord(incorrectWord: String, dictionaryList: List[String]): String = {
       val loggerObj = new Logger()
-       loggerObj.logger.info("function correcting word started")
+      loggerObj.logger.info("function correcting word started")
       loggerObj.startTime()
-      var correctedWord = ""
-     // var damerauDistance=0
-      for (line <-dictionaryList.indices) {
-        if (incorrectWord.damerauDist(dictionaryList(line))== 1) {
-          correctedWord = (dictionaryList(line) + " ").mkString
+      var string = ""
+      val x = dictionaryList.map(x => x.damerauDist(incorrectWord))
+      val l = dictionaryList.zip(x)
+      val d = l.filter(x => x._2 == 1)
+      val res = d.isEmpty
+      if (!res) {
+        string = d.head._1
+      }
+      else {
+        val t = l.filter(x => x._2 == 2)
+        val c = t.isEmpty
+        if (!c) {
+          string = t.head._1
         }
-//         else if(incorrectWord.damerauDist(dictionaryList(line))>1){
-//         correctedWord=(dictionaryList(line)+" ").mkString
-//         }
       }
       loggerObj.stopTime()
       loggerObj.logger.info("function correcting word ended" + loggerObj.getTime)
-      correctedWord
+      string
     }
+
+
   }
 }
 
 object Main {
   val p = new Trie[Int]
   def main(args: Array[String]): Unit = {
-    val path = "C:\\Users\\hai\\Desktop\\SpellChecker\\engmix.txt"
+    val path = "/home/preethia/Desktop/SpellChecker/engmix.txt"
     val a = System.currentTimeMillis()
     val DictionaryList = readDictionary(path)
-    println("Enter your input:")
-    val inputString = scala.io.StdIn.readLine()
-    println("Is given input is :" + inputString)
-    val inputLowercase = inputString.toLowerCase.trim()
-    val input = inputLowercase.replace("." , "")
-    val s = input.split(" ")
-    val t = s.zipWithIndex
-    val arr = new Array[String](s.length)
+    while(true){
+      println("Enter your input:")
+      val inputString = scala.io.StdIn.readLine()
+      println("Is given input is :" + inputString)
+      val inputLowercase = inputString.toLowerCase.trim()
+      val input = inputLowercase.replace("." , "")
+      val s = input.split(" ")
+      val t = s.zipWithIndex
+      val arr = new Array[String](s.length)
 
-    var correctedInput= " "
-    for (i <- 0 until s.length) {
-      if (p.get(t(i)._1) != None) {
-        arr(t(i)._2) = t(i)._1
+      var correctedInput= " "
+      for (i <- 0 until s.length) {
+        if (p.get(t(i)._1) != None) {
+          arr(t(i)._2) = t(i)._1
+        }
+        else {
+          val q  = p.correctingWord(t(i)._1, DictionaryList)
+          arr(t(i)._2) = q
+        }
       }
-      else {
-         val q  = p.correctingWord(t(i)._1, DictionaryList)
-        arr(t(i)._2) = q
-      }
+      println(arr.mkString(" "))
     }
-    println(arr.mkString(" "))
     val b = System.currentTimeMillis()
-   val diff = b - a
+    val diff = b - a
     print(diff)
   }
+
+
 
   /***reads the contents in the dictionary file and insert it into trie data structure
    *
@@ -114,12 +128,19 @@ object Main {
     // val a = System.currentTimeMillis()
     var lines= Source.fromFile(path).getLines().toList
     for (line <- lines.indices) {
-        p.put(lines(line), 1)
-      }
+      p.put(lines(line), 1)
+    }
 
     loggerObj.stopTime()
     loggerObj.logger.info("function read dictionary ended" + loggerObj.getTime)
-     lines
+    lines
   }
 }
+
+
+
+
+
+
+
 
