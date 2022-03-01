@@ -1,161 +1,197 @@
 
-
-
-import Trie.Trie
 import com.github.vickumar1981.stringdistance.StringConverter._
+import java.io.{FileNotFoundException, IOException}
+import scala.io.Source
+class Trie[Val] {
+  private var store = new Node(Map(), None)
 
-import java.io.FileNotFoundException
-import java.nio.charset.CodingErrorAction
-import scala.collection.mutable.ArrayBuffer
-import scala.io.{Codec, Source}
+  /** *
+   * to put data into the trie ds
+   *
+   * @param key   :String which need to be inserted in trie
+   * @param value :Integer to store along with key as value
+   * @return
+   */
+  def put(key: String, value: Val): Unit = store = store.put(key, value, 0)
 
-object Trie {
-  class Trie[Val] {
-    private var store = new Node(Map(), None)
+  /** *
+   * to check is data in trie
+   *
+   * @param key :String which need to be found in trie
+   * @return: Option[Val] where the data is inserted with some value or none
+   */
+  def get(key: String): Option[Val] = store.get(key).contents
 
-    def put(key: String, value: Val): Unit = store = store.put(key, value, 0)
+  private class Node(kids: Map[Char, Node], val contents: Option[Val]) {
+    val count: Int =
+      (if (contents.isEmpty) 0 else 1) + kids.values.foldLeft(0)((acc, node) => acc + node.count)
 
-    def get(key: String): Option[Val] = store.get(key).contents
+    def children: Char => Node = kids withDefaultValue new Node(Map(), None)
 
-    private class Node(kids: Map[Char, Node], val contents: Option[Val]) {
-      val count: Int =
-        (if (contents.isEmpty) 0 else 1) + kids.values.foldLeft(0)((acc, node) => acc + node.count)
+    /** *
+     * to put data into the trie ds
+     *
+     * @param key      :String which need to be inserted in trie
+     * @param value    :Integer to store along with key as value
+     * @param position : is used to increment from 0 to length of key
+     * @return here the data is inserted with some value
+     */
+    def put(key: String, value: Val, position: Int): Node =
+      if (position == key.length) new Node(kids, Some(value))
+      else {
+        val char = key.charAt(position)
+        new Node(kids updated(char, children(char).put(key, value, position + 1)), contents)
+      }
+    /** *
+     * find the string in trie
+     *
+     * @param key      :String which need to be found in trie
+     * @param position : position is used to increment from 0 to length of key
+     * @return:Node where the data is inserted with some value
+     */
 
-      def children: Char => Node = kids withDefaultValue new Node(Map(), None)
-
-      def put(key: String, value: Val, pos: Int): Node =
-        if (pos == key.length) new Node(kids, Some(value))
-        else {
-          val char = key.charAt(pos)
-          new Node(kids updated(char, children(char).put(key, value, pos + 1)), contents)
-        }
-
-      def put(key: String, value: Val): Node = put(key, value, 0)
-
-      def get(key: String, pos: Int): Node =
-        if (pos == key.length) this else children(key.charAt(pos)).get(key, pos + 1)
-
-      def get(key: String): Node = get(key, 0)
-
+    def get(key: String, position: Int): Node = {
+      val loggerObj = new Logger()
+      loggerObj.logger.info("function get started")
+      if (position == key.length) this else children(key.charAt(position)).get(key, position + 1)
     }
     /** *
-//     * it corrects the incorrect word using dictionary list
-//     *
-//     * @param incorrectWord  :String from user inputString not present in dictionary
-//     * @param dictionaryList :List[String] where the dictionary words are present
-//     *                       @return: returns a  corrected string
-//     */
-    def correctingWord(incorrectWord: String, dictionaryList: List[String]): String = {
+     * find the string in trie
+     *
+     * @param key :String which need to be found in trie
+     * @return: Node where the data is inserted with some value
+     */
+
+    def get(key: String): Node = {
       val loggerObj = new Logger()
-      loggerObj.logger.info("function correcting word started")
-      loggerObj.startTime()
-      var string = ""
-      val x = dictionaryList.map(x => x.damerauDist(incorrectWord))
-      val l = dictionaryList.zip(x)
-      val d = l.filter(x => x._2 == 1)
-      val res = d.isEmpty
-      if (!res) {
-        string = d.head._1
-      }
-      else {
-        val t = l.filter(x => x._2 == 2)
-        val c = t.isEmpty
-        if (!c) {
-          string = t.head._1
-        }
-      }
-      loggerObj.stopTime()
-      loggerObj.logger.info("function correcting word ended" + loggerObj.getTime)
-      string
+      loggerObj.logger.info("function get started")
+      get(key, 0)
     }
-
-
   }
 }
 
 object Main {
-  val p = new Trie[Int]
+  val trieObj = new Trie[Int]
 
   def main(args: Array[String]): Unit = {
     val path = "/home/preethia/Desktop/SpellChecker/engmix.txt"
     val dictionaryList = readDictionary(path)
-    var flag=true
+    var flag = true
     while (flag) {
-      println("Enter 1 for spellchecking and anything for exit" )
+      println("Enter 1 for spellchecking and anything number for exit")
       val option = scala.io.StdIn.readInt()
-      option match{
+      option match {
         case 1 => println("Enter your input:")
-                val inputString = scala.io.StdIn.readLine()
-                 println("Is given input is :" + inputString)
-                println(  checkString(inputString,dictionaryList))
+          val inputString = scala.io.StdIn.readLine()
+          println("Is given input is :" + inputString)
+          println(checkString(inputString, dictionaryList))
         case _ => print("Exited")
-                  flag=false
+          flag = false
 
       }
     }
   }
 
-
   /** *
    * check the given string is present in dictionary or not.
    *
-   * @param inputString        :The phrase given by user
-   * @param dictionaryList  :dictionary words stored in list
+   * @param inputString    :The phrase given by user
+   * @param dictionaryList :dictionary words stored in list
    * @return the full corrected phrase is returned
    */
-def checkString(inputString:String,dictionaryList:List[String]):String={
-  val loggerObj = new Logger()
-  loggerObj.logger.info("function check string started")
-  loggerObj.startTime()
+  def checkString(inputString: String, dictionaryList: List[String]): String = {
+    val loggerObj = new Logger()
+    loggerObj.logger.info("function check string started")
+    loggerObj.startTime()
+    if (inputString.isEmpty() || dictionaryList.isEmpty) {
+      return "empty input"
+    }
     val inputLowercase = inputString.toLowerCase.trim()
     val input = inputLowercase.replace(".", "")
-    val s = input.split(" ")
-    val t = s.zipWithIndex
-    val arr = new Array[String](s.length)
-    for (i <- 0 until s.length) {
-      if (p.get(t(i)._1) != None) {
-        arr(t(i)._2) = t(i)._1
+    // splitting given string to words
+    val words = input.split(" ")
+    //zipping the word in order the user gave so it wont shuffle during correcting and checking
+    val zipedWord = words.zipWithIndex
+    val arrayWords = new Array[String](words.length)
+    for (i <- 0 until words.length) {
+      if (trieObj.get(zipedWord(i)._1) != None) {// extracting string from zipped input
+        arrayWords(zipedWord(i)._2) = zipedWord(i)._1 // inserts into the appropriate input position
       }
       else {
-        val q = p.correctingWord(t(i)._1, dictionaryList)
-        arr(t(i)._2) = q
+        val q = correctingWord(zipedWord(i)._1, dictionaryList)
+        arrayWords(zipedWord(i)._2) = q
       }
     }
-  loggerObj.stopTime()
-  loggerObj.logger.info("function check string ended" + loggerObj.getTime)
-    arr.mkString(" ")
+    loggerObj.stopTime()
+    loggerObj.logger.info("function check string ended" + loggerObj.getTime)
+    arrayWords.mkString(" ")
   }
 
 
   /** *reads the contents in the dictionary file and insert it into trie data structure
    *
-   * @param path  :dictionary path
+   * @param path :dictionary path
    * @return dictionarywords in list
    */
   def readDictionary(path: String): List[String] = {
     val loggerObj = new Logger()
     loggerObj.logger.info("function read dictionary started")
     loggerObj.startTime()
-    implicit val codec = Codec("UTF-8")
-    codec.onMalformedInput(CodingErrorAction.REPLACE)
-    codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
-    var dictionaryList = List(" ")
-    val source = Source.fromFile(path)
-    if (source.isEmpty== true) {
-      return List("file is empty")
+    var dictionaryList: List[String] = List(" ")
+    try {
+      val lines = Source.fromFile(path)
+      val source = lines.getLines()
+      dictionaryList = source.toList // converting each lines of word to list
+      lines.close()
+    }
+    catch {
+      case e: FileNotFoundException => loggerObj.logger.info("Couldn't find that file.")
+        return List("file not found exception")
+      case e1: IOException => loggerObj.logger.info("input output exception")
+        return List("IO exception")
+    }
+    for (line <- dictionaryList.indices) {
+      trieObj.put(dictionaryList(line), 1) // inserting dictionary words into trie
+    }
+    loggerObj.stopTime()
+    loggerObj.logger.info("function read dictionary ended" + loggerObj.getTime)
+    dictionaryList
+  }
+  /** *
+   * it corrects the incorrect word using dictionary list
+   *
+   * @param incorrectWord  :String from user inputString not present in dictionary
+   * @param dictionaryList :List[String] where the dictionary words are present
+   * @return: returns a  corrected string
+   */
+  def correctingWord(incorrectWord: String, dictionaryList: List[String]): String = {
+    val loggerObj = new Logger()
+    loggerObj.logger.info("function correcting word started")
+    loggerObj.startTime()
+    var string = ""
+    // finding edit distance for dictionary and given incorrect string
+    val distance = dictionaryList.map(x => x.damerauDist(incorrectWord))
+    // zipping the edit distance of the string with it.
+    val zippedList = dictionaryList.zip(distance)
+    //filtering the edit distance if it is 1
+    val filteredEdit1 = zippedList.filter(x => x._2 == 1)
+    val result = filteredEdit1.isEmpty
+    if (!result) {
+      string = filteredEdit1.head._1 //get string(hii) from List("hii",1) 1-edit distance
     }
     else {
-      var lines = source.getLines()
-      var dictionaryList = lines.toList
-      for (line <- dictionaryList.indices) {
-        p.put(dictionaryList(line), 1)
+      //filtering the edit distance if it is 2
+      val filteredEdit2 = zippedList.filter(x => x._2 == 2)
+      val withEdit2= filteredEdit2.isEmpty
+      if (!withEdit2) {
+        string = filteredEdit2.head._1
       }
-      source.close
-      loggerObj.stopTime()
-      loggerObj.logger.info("function read dictionary ended" + loggerObj.getTime)
-      return dictionaryList
     }
+    loggerObj.stopTime()
+    loggerObj.logger.info("function correcting word ended" + loggerObj.getTime)
+    string
   }
+
 }
 
 
