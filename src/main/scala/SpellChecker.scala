@@ -12,7 +12,8 @@ class Trie[Val] {
    * @param value :Integer to store along with key as value
    * @return
    */
-  def put(key: String, value: Val): Unit = store = store.put(key, value, 0)
+  def put(key: String, value: Val): Unit = {
+    store = store.put(key, value, 0)}
 
   /** *
    * to check is data in trie
@@ -20,13 +21,15 @@ class Trie[Val] {
    * @param key :String which need to be found in trie
    * @return: Option[Val] where the data is inserted with some value or none
    */
-  def get(key: String): Option[Val] = store.get(key).contents
+  def get(key: String): Option[Val] = {
+    val loggerObj = new Logger()
+    loggerObj.logger.info("function get started")
+    store.get(key).contents}
 
   private class Node(kids: Map[Char, Node], val contents: Option[Val]) {
-    val count: Int =
-      (if (contents.isEmpty) 0 else 1) + kids.values.foldLeft(0)((acc, node) => acc + node.count)
 
-    def children: Char => Node = kids withDefaultValue new Node(Map(), None)
+    def children: Map[Char, Node] = kids withDefaultValue new Node(Map(), None)
+
 
     /** *
      * to put data into the trie ds
@@ -47,7 +50,7 @@ class Trie[Val] {
      *
      * @param key      :String which need to be found in trie
      * @param position : position is used to increment from 0 to length of key
-     * @return:Node where the data is inserted with some value
+     * @return:  Node where the data is inserted with some value
      */
 
     def get(key: String, position: Int): Node = {
@@ -70,28 +73,8 @@ class Trie[Val] {
   }
 }
 
-object Main {
+class SpellChecker {
   val trieObj = new Trie[Int]
-
-  def main(args: Array[String]): Unit = {
-    val path = "/home/preethia/Desktop/SpellChecker/engmix.txt"
-    val dictionaryList = readDictionary(path)
-    var flag = true
-    while (flag) {
-      println("Enter 1 for spellchecking and anything number for exit")
-      val option = scala.io.StdIn.readInt()
-      option match {
-        case 1 => println("Enter your input:")
-          val inputString = scala.io.StdIn.readLine()
-          println("Is given input is :" + inputString)
-          println(checkString(inputString, dictionaryList))
-        case _ => print("Exited")
-          flag = false
-
-      }
-    }
-  }
-
   /** *
    * check the given string is present in dictionary or not.
    *
@@ -99,7 +82,7 @@ object Main {
    * @param dictionaryList :dictionary words stored in list
    * @return the full corrected phrase is returned
    */
-  def checkString(inputString: String, dictionaryList: List[String]): String = {
+  def checkWords(inputString: String, dictionaryList: List[String]): String = {
     val loggerObj = new Logger()
     loggerObj.logger.info("function check string started")
     loggerObj.startTime()
@@ -193,6 +176,30 @@ object Main {
   }
 
 }
+object Main {
+  val spellCheckerObj = new SpellChecker
+
+  def main(args: Array[String]): Unit = {
+    val path = "/home/preethia/Desktop/SpellChecker/engmix.txt"
+    val dictionaryList = spellCheckerObj.readDictionary(path)
+    var flag = true
+    while (flag) {
+      println("Enter 1 for spellchecking and another number for exit")
+      val option = scala.io.StdIn.readInt()
+      if (option.isValidInt) {
+        option match {
+          case 1 => println("Enter your input:")
+            val inputString = scala.io.StdIn.readLine()
+            println("The corrected input is  " + spellCheckerObj.checkWords(inputString, dictionaryList))
+          case _ => print("Exited")
+            flag = false
+        }
+      }
+    }
+  }
+}
+
+
 
 
 

@@ -2,16 +2,16 @@
 import org.scalatest.funsuite.AnyFunSuite
 
 class Testcase extends AnyFunSuite {
-
+  val spellCheckerObj= new SpellChecker
   val trieObj = new Trie[Int]
   val correctPath = "/home/preethia/Desktop/SpellChecker/testdictionary.txt"
   val path = "/home/preethia/Desktop/SpellChecker/testdictionar.txt"
   trieObj.put("apple", 1)
 
   test(" read dictionary") {
-    assert(Main.readDictionary(correctPath) == List("a", "abbey", "abbeys", "abbot", "abjurer", "ablatives", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.readDictionary(correctPath) == List("a", "abbey", "abbeys", "abbot", "abjurer", "ablatives", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     )
-    assert(Main.readDictionary(path) == List("file not found exception"))
+    assert(spellCheckerObj.readDictionary(path) == List("file not found exception"))
   }
 
   test("get word") {
@@ -21,19 +21,19 @@ class Testcase extends AnyFunSuite {
   }
 
   test("correcting words") {
-    assert(Main.correctingWord("abbat", List("a", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.correctingWord("abbat", List("a", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     ) == "abbot")
-    assert(Main.correctingWord("a", List("a", "abbot", "abjurer", "ablatives", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.correctingWord("a", List("a", "abbot", "abjurer", "ablatives", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     ) == "")
-    assert(Main.correctingWord("abb", List("a", "abbey", "abbeys", "abbot", "abjurer", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.correctingWord("abb", List("a", "abbey", "abbeys", "abbot", "abjurer", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     ) == "a")
   }
 
   test("check the word") {
-    assert(Main.checkString("ablom", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.checkWords("ablom", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     ) == "abloom")
-    assert(Main.checkString("ablutio", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablutions")
+    assert(spellCheckerObj.checkWords("ablutio", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablutions")
     ) == "ablutions")
-    assert(Main.checkString("hi", List()) == "empty input")
+    assert(spellCheckerObj.checkWords("hi", List()) == "empty input")
   }
 }

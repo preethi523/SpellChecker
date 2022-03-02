@@ -7,7 +7,7 @@ class Logger {
 
   /**
    * starts the stopwatch
-   * @return
+   *
    */
   def startTime():Unit={
     stopWatch.start()
