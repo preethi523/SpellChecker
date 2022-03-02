@@ -23,7 +23,7 @@ class Trie[Val] {
    */
   def get(key: String): Option[Val] = {
     val loggerObj = new Logger()
-    loggerObj.logger.info("function get started")
+    loggerObj.logger.info("function get of trie started")
     store.get(key).contents}
 
   private class Node(kids: Map[Char, Node], val contents: Option[Val]) {
@@ -184,19 +184,18 @@ object Main {
     val dictionaryList = spellCheckerObj.readDictionary(path)
     var flag = true
     while (flag) {
-      println("Enter 1 for spellchecking and another number for exit")
-      val option = scala.io.StdIn.readInt()
-      if (option.isValidInt) {
-        option match {
-          case 1 => println("Enter your input:")
-            val inputString = scala.io.StdIn.readLine()
+      println("Enter word for spellchecking and  number for exit")
+      val reg="""[0-9]""".r
+      println("Enter your input:")
+        val inputString = scala.io.StdIn.readLine()
+        reg.findFirstMatchIn(inputString) match {
+          case None =>
             println("The corrected input is  " + spellCheckerObj.checkWords(inputString, dictionaryList))
-          case _ => print("Exited")
+          case Some(_) => print("Exited")
             flag = false
         }
       }
     }
-  }
 }
 
 
