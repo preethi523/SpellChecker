@@ -30,10 +30,10 @@ class Testcase extends AnyFunSuite {
   }
 
   test("check the word") {
-    assert(spellCheckerObj.checkWords("ablom", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
+    assert(spellCheckerObj.checkWord("ablom", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablution", "ablutions")
     ) == "abloom")
-    assert(spellCheckerObj.checkWords("ablutio", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablutions")
+    assert(spellCheckerObj.checkWord("ablutio", List("a", "abbey", "abbeys", "abbot", "abjurer", "abjurersblative", "ablatives", "ablaut", "ablaze", "able", "abler", "ablest", "abloom", "ablutions")
     ) == "ablutions")
-    assert(spellCheckerObj.checkWords("hi", List()) == "empty input")
+    assert(spellCheckerObj.checkWord("hi", List()) == "empty input")
   }
 }
